@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shop</title>
+    <link rel="icon" type="image/x-icon" href="/icon.png" />
+    <script
+      src="https://kit.fontawesome.com/2cdc7801c1.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="../CSSCode/homepage.css" />
+    <script
+      type="text/javascript"
+      src="https://www.gstatic.com/charts/loader.js"
+    ></script>
+    <script src="../browserJS/shop.js"></script>
+    <link rel="stylesheet" href="../CSSCode/shop.css" />
+  </head>
+
+  <body>
+    <header>
+      <!-- NAVBAR -->
+      <div class="navbar">
+        <div class="logo">
+          <a href="/"
+            ><img
+              src="../media/drone-icon-white-png.png"
+              alt="BuildYourDrone"
+            />BuildYourDrone</a
+          >
+        </div>
+        <ul class="links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/shop">Shop</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li>
+            <a href="/cart"><i class="fa-solid fa-cart-shopping"></i></a>
+          </li>
+          <li>
+            <a href="/login"><i class="fa-solid fa-user"></i></a>
+          </li>
+        </ul>
+        <div class="toggle"><i class="fa-solid fa-bars"></i></div>
+      </div>
+      <div class="dropdownmenu">
+        <li><a href="/">Home</a></li>
+        <li><a href="/shop">Shop</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li>
+          <a href="/cart"><i class="fa-solid fa-cart-shopping"></i></a>
+        </li>
+        <li>
+          <a href="/login"><i class="fa-solid fa-user"></i></a>
+        </li>
+      </div>
+      <!-- HEADER -->
+      <div class="row">
+        <div class="col">
+          <h3>Shop</h3>
+          <p class="txt">
+            Welcome to our shop with all what you need for your drone!
+          </p>
+        </div>
+        <div class="col">
+          <img src="../media/Readytofly.png" alt="drone" />
+        </div>
+      </div>
+    </header>
+
+    <!-- BEST SELLERS -->
+    <h1>Top 3 popular products</h1>
+    <div id="chart_div" class="chart"></div>
+
+    <!-- FILTER PRODUCTS -->
+    <div class="filterproduct">
+      <ul class="filterrow">
+        <i class="fa-solid fa-filter"></i>
+        <li class="filters" data-filter="All">All</li>
+        <li class="filters" data-filter="Motors">Motors</li>
+        <li class="filters" data-filter="Propellers">Propellers</li>
+        <li class="filters" data-filter="Cameras">Cameras</li>
+        <li class="filters" data-filter="Cases">Cases</li>
+        <li class="filters" data-filter="Drones">Drones</li>
+      </ul>
+    </div>
+
+    <!-- ALL PRODUCTS -->
+    <div id="productContainer"></div>
+
+    <!-- SCRIPT -->
+    <script>
+      document.addEventListener("DOMContentLoaded", async function () {
+        const productContainer = document.getElementById("productContainer");
+
+        try {
+          const response = await fetch("/api/allProducts"); // Assuming your API endpoint is "/api/allProducts"
+          const products = await response.json();
+
+          // Populate productContainer with fetched products
+          products.forEach((product) => {
+            let productImageSrc = "../media/case.jpg"; // Default image, update based on product type if necessary
+            let productName = "";
+            let productPrice = 0;
+            let productDetails = "";
+            let productCategory = "";
+
+            if (product.motorName) {
+              productImageSrc = "../media/motores.webp";
+              productName = product.motorName;
+              productPrice = product.motorPrice;
+              productDetails = `Power: ${product.motorPower},<br>Connector: ${product.motorConnector},<br>Type: ${product.motorType}`;
+              productCategory = "Motors";
+            } else if (product.propellerName) {
+              productImageSrc = "../media/propeller-for-drones.jpg";
+              productName = product.propellerName;
+              productPrice = product.propellerPrice;
+              productDetails = `Size: ${product.propellerSize},<br>Color: ${product.propellerColor},<br>PeakNumber: ${product.propellerPeakNumber}`;
+              productCategory = "Propellers";
+            } else if (product.cameraName) {
+              productImageSrc = "../media/drone-camera.webp";
+              productName = product.cameraName;
+              productPrice = product.cameraPrice;
+              productDetails = `Resolution: ${product.cameraResolution},<br>Sensor: ${product.cameraSensor},<br>Focal: ${product.cameraFocal}`;
+              productCategory = "Cameras";
+            } else if (product.caseName) {
+              productName = product.caseName;
+              productPrice = product.casePrice;
+              productDetails = `Size: ${product.caseSize},<br>Material: ${product.caseMaterial},<br>Color: ${product.caseColor}`;
+              productCategory = "Cases";
+            } else if (product.droneName) {
+              productImageSrc = "../media/Readytofly.png";
+              productName = product.droneName;
+              productPrice = product.dronePrice;
+              productDetails = `Battery life: ${product.droneBatterylife},<br>Camera: ${product.droneCamera},<br>Weight: ${product.droneWeight}`;
+              productCategory = "Drones";
+            } else {
+              productName = "Unknown product type";
+              productCategory = "Unknown";
+            }
+
+            const productHTML = `
+              <div class="rowshop" data-category="${productCategory}">
+                <div class="col3">
+                  <img src="${productImageSrc}" alt="${productName}">
+                </div>
+                <div class="col5">
+                  <h2>${productName}</h2>
+                  <h5>${productDetails}</h5>
+                </div>
+                <div class="col3">
+                  <h1>${productPrice.toFixed(2)}€</h1>
+                  <div>
+                    <a href="#" class="buybtn" data-name="${productName}" data-price="${productPrice}" data-category="${productCategory}" data-image="${productImageSrc}">Buy</a>
+                  </div>
+                </div>
+              </div>
+            `;
+            productContainer.insertAdjacentHTML("beforeend", productHTML);
+          });
+
+          // Add event listeners after dynamically creating the buttons
+          document.querySelectorAll(".buybtn").forEach((button) => {
+            button.addEventListener("click", function (event) {
+              event.preventDefault();
+              const product = {
+                name: this.getAttribute("data-name"),
+                price: parseFloat(this.getAttribute("data-price")),
+                category: this.getAttribute("data-category"),
+                image: this.getAttribute("data-image"),
+                quantity: 1,
+              };
+              addToCart(product);
+              window.location.replace("/cart");
+            });
+          });
+        } catch (error) {
+          console.error("Error fetching products:", error);
+        }
+
+        const filters = document.querySelectorAll(".filters");
+        filters.forEach((filter) => {
+          filter.addEventListener("click", function () {
+            const filterType = this.getAttribute("data-filter");
+            filterProducts(filterType);
+          });
+        });
+
+        function filterProducts(filterType) {
+          const products = document.querySelectorAll(".rowshop");
+          products.forEach((product) => {
+            const productCategory = product.getAttribute("data-category");
+            if (filterType === "All" || productCategory === filterType) {
+              product.style.display = "flex"; // or "block" based on your design
+            } else {
+              product.style.display = "none";
+            }
+          });
+        }
+
+        function addToCart(product) {
+          let cart = JSON.parse(localStorage.getItem("cart")) || [];
+          const existingProductIndex = cart.findIndex(
+            (item) => item.name === product.name
+          );
+
+          if (existingProductIndex > -1) {
+            cart[existingProductIndex].quantity += 1;
+          } else {
+            cart.push(product);
+          }
+
+          localStorage.setItem("cart", JSON.stringify(cart));
+          alert("Product added to cart");
+        }
+      });
+
+      const toggle = document.querySelector(".toggle");
+      const dropdownmenu = document.querySelector(".dropdownmenu");
+      const toggleicon = document.querySelector(".toggle i");
+
+      toggle.onclick = function () {
+        dropdownmenu.classList.toggle("open");
+        const isOpen = dropdownmenu.classList.contains("open");
+        toggleicon.classList = isOpen
+          ? "fa-solid fa-xmark"
+          : "fa-solid fa-bars";
+      };
+    </script>
+  </body>
+</html>

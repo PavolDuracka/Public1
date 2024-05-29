@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Propellers</title>
+    <link rel="icon" type="image/x-icon" href="../media/icon.png" />
+    <link rel="stylesheet" href="../CSSCode/products.css" />
+    <script
+      src="https://kit.fontawesome.com/2cdc7801c1.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="../CSSCode/homepage.css" />
+  </head>
+
+  <body>
+    <header>
+      <!------------NAVBAR------------->
+      <div class="navbar">
+        <div class="logo">
+          <a href="/"
+            ><img
+              src="../media/drone-icon-white-png.png"
+              alt=""
+            />BuildYourDrone</a
+          >
+        </div>
+
+        <ul class="links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/shop">Shop</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li>
+            <a href="/cart"><i class="fa-solid fa-cart-shopping"></i></a>
+          </li>
+          <li>
+            <a href="/login"><i class="fa-solid fa-user"></i></a>
+          </li>
+        </ul>
+        <div class="toggle"><i class="fa-solid fa-bars"></i></div>
+      </div>
+      <div class="dropdownmenu">
+        <li><a href="/">Home</a></li>
+        <li><a href="/shop">Shop</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li>
+          <a href="/cart"><i class="fa-solid fa-cart-shopping"></i></a>
+        </li>
+        <li>
+          <a href="/login"><i class="fa-solid fa-user"></i></a>
+        </li>
+      </div>
+    </header>
+    <!------------Products to choose from------------->
+    <div class="container1">
+      <h1>Step 3/4 - Choose a propeller</h1>
+    <div class="row2">
+      <!-- ALL PRODUCTS -->
+      <div id="productContainer"></div>
+    </div>
+
+    <!-------BUTTONS-------->
+    <a href="/chooseCase" class="startbtn next">Next step &#8594;</a>
+    <a href="/chooseCamera" class="startbtn previous">&#8592; Previous step </a>
+    <script>
+        document.addEventListener("DOMContentLoaded", async function () {
+        const productContainer = document.getElementById("productContainer");
+
+        try {
+          const response = await fetch("/api/allProducts"); // Assuming your API endpoint is "/api/allProducts"
+          const products = await response.json();
+
+          // Populate productContainer with fetched products
+          products.forEach((product) => {
+            if (product.propellerName) {
+              productImageSrc = "../media/propeller-for-drones.jpg";
+              productName = product.propellerName;
+              productPrice = product.propellerPrice;
+              productDetails = `Size: ${product.propellerSize},<br>Color: ${product.propellerColor},<br>PeakNumber: ${product.propellerPeakNumber}`;
+              productCategory = "Propellers";
+            
+            if(productCategory==="Propellers"){
+            const productHTML = `
+              <div class="rowshop" data-category="${productCategory}">
+                <div class="col3">
+                  <img src="${productImageSrc}" alt="${productName}">
+                </div>
+                <div class="col5">
+                  <h2>${productName}</h2>
+                  <h5>${productDetails}</h5>
+                </div>
+                <div class="col3">
+                  <h1>${productPrice.toFixed(2)}€</h1>
+                  <div>
+                    <a href="#" class="buybtn" data-name="${productName}" data-price="${productPrice}" data-category="${productCategory}" data-image="${productImageSrc}">Buy</a>
+                  </div>
+                </div>
+              </div>
+            `;
+            productContainer.insertAdjacentHTML("beforeend", productHTML);
+            }
+            }
+          });
+
+          // Add event listeners after dynamically creating the buttons
+          document.querySelectorAll(".buybtn").forEach((button) => {
+            button.addEventListener("click", function (event) {
+              event.preventDefault();
+              const product = {
+                name: this.getAttribute("data-name"),
+                price: parseFloat(this.getAttribute("data-price")),
+                category: this.getAttribute("data-category"),
+                image: this.getAttribute("data-image"),
+                quantity: 1,
+              };
+              addToCart(product);
+              window.location.replace("/chooseCase");
+            });
+          });
+        } catch (error) {
+          console.error("Error fetching products:", error);
+        }
+
+        function addToCart(product) {
+          let cart = JSON.parse(localStorage.getItem("cart")) || [];
+          const existingProductIndex = cart.findIndex(
+            (item) => item.name === product.name
+          );
+
+          if (existingProductIndex > -1) {
+            cart[existingProductIndex].quantity += 1;
+          } else {
+            cart.push(product);
+          }
+
+          localStorage.setItem("cart", JSON.stringify(cart));
+          alert("Product added to cart");
+        }
+      });
+    </script>
+  </body>
+</html>

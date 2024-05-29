@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ShoppingCart</title>
+    <script
+      type="text/javascript"
+      src="https://www.gstatic.com/charts/loader.js"
+    ></script>
+    <link rel="icon" type="image/x-icon" href="/icon.png" />
+    <script
+      src="https://kit.fontawesome.com/2cdc7801c1.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="../CSSCode/homepage.css" />
+    <link rel="stylesheet" href="../CSSCode/cart.css" />
+    <link rel="stylesheet" href="../CSSCode/shop.css" />
+  </head>
+  <body>
+    <header>
+      <!------------NAVBAR------------->
+      <div class="navbar">
+        <div class="logo">
+          <a href="/"
+            ><img
+              src="/media/drone-icon-white-png.png"
+              alt=""
+            />BuildYourDrone</a
+          >
+        </div>
+
+        <ul class="links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/shop">Shop</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li>
+            <a href="/cart"><i class="fa-solid fa-cart-shopping"></i></a>
+          </li>
+          <li>
+            <a href="/login"><i class="fa-solid fa-user"></i></a>
+          </li>
+        </ul>
+        <div class="toggle"><i class="fa-solid fa-bars"></i></div>
+      </div>
+      <div class="dropdownmenu">
+        <li><a href="/">Home</a></li>
+        <li><a href="/shop">Shop</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li>
+          <a href="/cart"><i class="fa-solid fa-cart-shopping"></i></a>
+        </li>
+        <li>
+          <a href="/login"><i class="fa-solid fa-user"></i></a>
+        </li>
+      </div>
+    </header>
+    <!-----------------CART ITEMS------------------>
+    <div class="titleofcart">
+      <h1>My shopping Cart <i class="fa-solid fa-cart-shopping"></i></h1>
+    </div>
+    <div class="cartcontainer cartpage">
+      <table>
+        <tr>
+          <th>Product</th>
+          <th></th>
+          <th>Total</th>
+        </tr>
+      </table>
+      <!-- Cart items will be dynamically inserted here -->
+      <div class="cartProduct"></div>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        console.log("DOM fully loaded and parsed");
+
+        const cartContainer = document.querySelector(".cartProduct");
+
+        if (!cartContainer) {
+          console.error("Cart container not found");
+          return;
+        }
+
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        let total = 0;
+
+        if (cart.length === 0) {
+          cartContainer.insertAdjacentHTML(
+            "beforeend",
+            "<tr><td colspan='3'><h2>The cart is empty!</h2></td></tr>"
+          );
+          return;
+        }
+        cart.forEach((item, index) => {
+          const itemSubtotal = parseFloat(item.price) * item.quantity;
+          total += itemSubtotal;
+
+          const itemHTML = `
+            <tr>
+              <td>
+                <div class="cardinfo">
+                  <div>
+                    <p>${item.name}</p>
+                    <small>Price: ${item.price}€</small>
+                    <br />
+                    <a href="#" class="removebtn" data-index="${index}">Remove</a>
+                  </div>
+                </div>
+              </td>
+              <td><input type="number" value="${
+                item.quantity
+              }" data-index="${index}" class="quantity-input"/></td>
+              <td>${itemSubtotal.toFixed(2)}€</td>
+            </tr>
+            <tr>
+            <td colspan="2">Total</td>
+            <td>${total.toFixed(2)}€</td>
+          </tr>
+          `;
+          cartContainer.insertAdjacentHTML("beforeend", itemHTML);
+        });
+        cartContainer.insertAdjacentHTML("beforeend", '<br><a href="#" class="buybtn">Complete an order</a>');
+        document.querySelectorAll(".buybtn").forEach((button) => {
+          button.addEventListener("click", function (event) {
+            cartContainer.insertAdjacentHTML("beforeend", '<h2 id="invoice">Find your invoice in the email!</h2>');
+          });
+        });
+
+        document.querySelectorAll(".removebtn").forEach((button) => {
+          button.addEventListener("click", function (event) {
+            event.preventDefault();
+            const index = this.getAttribute("data-index");
+            removeFromCart(index);
+          });
+        });
+
+        document.querySelectorAll(".quantity-input").forEach((input) => {
+          input.addEventListener("change", function () {
+            const index = this.getAttribute("data-index");
+            updateQuantity(index, this.value);
+          });
+        });
+
+        function removeFromCart(index) {
+          cart.splice(index, 1);
+          localStorage.setItem("cart", JSON.stringify(cart));
+          location.reload();
+        }
+
+        function updateQuantity(index, quantity) {
+          cart[index].quantity = parseInt(quantity, 10);
+          localStorage.setItem("cart", JSON.stringify(cart));
+          location.reload();
+        }
+      });
+    </script>
+  </body>
+</html>

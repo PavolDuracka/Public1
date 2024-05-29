@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Delete Document</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(rgba(32, 32, 32, 0.9), rgb(0, 0, 0, 0.9)),
+          url("../media/background.png") no-repeat center center fixed;
+        background-size: cover;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      .container {
+        background-color: rgba(0, 0, 0, 0.8);
+        padding: 20px;
+        border-radius: 10px;
+        width: 300px;
+        text-align: center;
+      }
+      .container h2 {
+        color: white;
+        margin-bottom: 20px;
+        border-bottom: 2px solid red;
+        display: inline-block;
+        padding-bottom: 5px;
+      }
+      .container label {
+        color: white;
+        display: block;
+        margin-bottom: 5px;
+      }
+      .container select,
+      .container input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: none;
+        border-radius: 5px;
+      }
+      .container button {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        background-color: red;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      .container button:hover {
+        background-color: darkred;
+      }
+      .container a {
+        color: white;
+        text-decoration: none;
+        margin-top: 10px;
+        display: block;
+      }
+      .container a:hover {
+        text-decoration: underline;
+      }
+      .container p {
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a href="/shop">Back to shop and see the products</a>
+      <h2>Delete Document</h2>
+      <form id="deleteForm">
+        <label for="model">Select Model:</label>
+        <select id="model" required>
+          <option value="user">User</option>
+          <option value="motor">Motor</option>
+          <option value="propeller">Propeller</option>
+          <option value="rtfdrone">Rtfdrone</option>
+          <option value="case">Case</option>
+        </select>
+        <label for="id">Enter ID:</label>
+        <input type="text" id="id" required />
+        <button type="submit">Delete</button>
+      </form>
+      <p id="responseMessage"></p>
+    </div>
+
+    <script>
+      document
+        .getElementById("deleteForm")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault();
+
+          const model = document.getElementById("model").value;
+          const id = document.getElementById("id").value;
+          const responseMessage = document.getElementById("responseMessage");
+
+          try {
+            const response = await fetch(`/api/${model}/${id}`, {
+              method: "DELETE",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+              responseMessage.textContent = result.message;
+              responseMessage.style.color = "green";
+            } else {
+              responseMessage.textContent = result.error;
+              responseMessage.style.color = "red";
+            }
+          } catch (error) {
+            responseMessage.textContent = "Error deleting document";
+            responseMessage.style.color = "red";
+          }
+        });
+    </script>
+  </body>
+</html>

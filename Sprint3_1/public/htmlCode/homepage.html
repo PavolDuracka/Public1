@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BuildYourDrone</title>
+    <link rel="icon" type="image/x-icon" href="../media/icon.png" />
+
+    <script
+      src="https://kit.fontawesome.com/2cdc7801c1.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="../CSSCode/homepage.css" />
+  </head>
+
+  <body>
+    <header>
+      <!------------NAVBAR------------->
+      <div class="navbar">
+        <div class="logo">
+          <a href="/"
+            ><img
+              src="/media/drone-icon-white-png.png"
+              alt=""
+            />BuildYourDrone</a
+          >
+        </div>
+
+        <ul class="links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/shop">Shop</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li>
+            <a href="/cart"><i class="fa-solid fa-cart-shopping"></i></a>
+          </li>
+          <li>
+            <a href="/login"><i class="fa-solid fa-user"></i></a>
+          </li>
+        </ul>
+        <div class="toggle"><i class="fa-solid fa-bars"></i></div>
+      </div>
+      <div class="dropdownmenu">
+        <li><a href="/">Home</a></li>
+        <li><a href="/shop">Shop</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li>
+          <a href="/cart"><i class="fa-solid fa-cart-shopping"></i></a>
+        </li>
+        <li>
+          <a href="/login"><i class="fa-solid fa-user"></i></a>
+        </li>
+      </div>
+
+      <!------------HEADER------------->
+      <div class="row">
+        <div class="col">
+          <h1>Let's build your <br />own drone!</h1>
+          <p>
+            Across world-wide market, it is our BuildYourDrone store, who offers
+            the most advanced and customizable drone website managment, <br />
+            Feel free to try out our online system or if you have any doubts,
+            you can always find our contacts in bar menu.
+          </p>
+          <a href="/chooseMotor" class="startbtn">Let's start! &#8594;</a>
+        </div>
+        <div class="col">
+          <img src="/media/pngimg.com - drone_PNG26.png" alt="drone" />
+        </div>
+      </div>
+    </header>
+    <!------------BUILD YOUR OWN DRONE------------->
+    <div class="container">
+      <div class="droneimage">
+        <h1>Start building your dream drone</h1>
+        <img src="/media/bigdrone.png" alt="" class="droneimageimg" />
+
+        <div class="item motor" style="top: 119%; left: 52%">
+          <div class="icon">
+            <div class="parts">
+              <h3>motor</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="item camera" style="top: 117%; left: 45%">
+          <div class="icon">
+            <div class="parts">
+              <h3>camera</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="item case" style="top: 105%; left: 50%">
+          <div class="icon">
+            <div class="parts">
+              <h3>case</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="item propellers" style="top: 120%; left: 33%">
+          <div class="icon">
+            <div class="parts">
+              <h3>propellers</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <a href="/chooseMotor" class="startbtn">Let's start! &#8594;</a>
+    <!------------READY TO FLY DRONES------------->
+    <div class="bestseller">
+      <div class="smallcontainer">
+        <div class="row">
+          <div class="col">
+            <img src="/media/Readytofly.png" alt="" class="bestsellerimg" />
+          </div>
+          <div class="col">
+            <h2>Ready To Fly</h2>
+            <p>
+              Explore our pre-assembled drones, designed for instant flight and
+              effortless enjoyment. Check out our ready-to-fly drones today!
+            </p>
+            <a href="/shop" class="startbtn">Check out &#8594;</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!------------BEST SELLERS------------->
+    <div class="container">
+      <h2>Featured products</h2>
+      <div class="row2"></div>
+    </div>
+    <!------------SCRIPT------------->
+    <script>
+      const toggle = document.querySelector(".toggle");
+      const dropdownmenu = document.querySelector(".dropdownmenu");
+      const toggleicon = document.querySelector(".toggle i");
+
+      toggle.onclick = function () {
+        dropdownmenu.classList.toggle("open");
+        const isOpen = dropdownmenu.classList.contains("open");
+
+        toggleicon.classList = isOpen
+          ? "fa-solid fa-xmark"
+          : "fa-solid fa-bars";
+      };
+
+      document.addEventListener("DOMContentLoaded", async function () {
+        const row2 = document.querySelector(".row2");
+
+        try {
+          const response = await fetch("/api/allProducts"); // Assuming your API endpoint is "/api/allProducts"
+          const products = await response.json();
+
+          // Display only the first four products
+          const maxProductsToShow = 4;
+          for (
+            let i = 0;
+            i < Math.min(products.length, maxProductsToShow);
+            i++
+          ) {
+            const product = products[i];
+
+            let productImageSrc = "../media/motores.webp"; // Default image, update based on product type if necessary
+            let productName = "";
+            let productPrice = "";
+            let productDetails = "";
+
+            if (product.motorName) {
+              productImageSrc = "../media/motores.webp";
+              productName = product.motorName;
+              productPrice = `${product.motorPrice.toFixed(2)}€`;
+            } else if (product.propellerName) {
+              productImageSrc = "../media/propeller-for-drones.jpg";
+              productName = product.propellerName;
+              productPrice = `${product.propellerPrice.toFixed(2)}€`;
+            } else if (product.cameraName) {
+              productImageSrc = "../media/drone-camera.webp";
+              productName = product.cameraName;
+              productPrice = `${product.cameraPrice.toFixed(2)}€`;
+            } else if (product.caseName) {
+              productName = product.caseName;
+              productPrice = `${product.casePrice.toFixed(2)}€`;
+            } else {
+              productName = "Unknown product type";
+            }
+
+            const productHTML = `
+          <div class="col4">
+            <img src="${productImageSrc}" alt="${productName}">
+            <h4>${productName}</h4>
+            <p>${productPrice}</p>
+          </div>
+        `;
+            row2.insertAdjacentHTML("beforeend", productHTML);
+          }
+        } catch (error) {
+          console.error("Error fetching products:", error);
+        }
+      });
+    </script>
+  </body>
+</html>

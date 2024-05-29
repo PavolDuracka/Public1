@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin/Dashboard</title>
+    <link rel="icon" type="image/x-icon" href="../media/icon.png" />
+    <link rel="stylesheet" href="../CSSCode/homepage.css" />
+    <link rel="stylesheet" href="../CSSCode/admin.css" />
+    <script
+      type="text/javascript"
+      src="https://www.gstatic.com/charts/loader.js"
+    ></script>
+
+    <script
+      src="https://kit.fontawesome.com/2cdc7801c1.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.49.1/apexcharts.min.js"></script>
+    <script src="../browserJS/admin.js"></script>
+  </head>
+  <body>
+    <div class="gridcontainer">
+      <div class="header">
+        <div class="menuicon" onclick="OpenSidebar()">
+          <i class="fa-solid fa-bars"></i>
+        </div>
+
+        <div class="headerleft">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+        <div class="headerright">
+          <a href="/login"
+            ><i class="fa-solid fa-user"></i>
+            <i class="fa-solid fa-envelope"></i
+          ></a>
+        </div>
+      </div>
+
+      <aside id="sidebar">
+        <div class="sidebartitle">
+          <div class="sidebarbrand">
+            <a href="/shop"><i class="fa-solid fa-shop">Store</i></a>
+          </div>
+        </div>
+        <ul class="sidebarlist">
+          <li class="sidebarlistitem">
+            <i class="fa-solid fa-user"><a href="/api/allUsers"> Users</a></i>
+          </li>
+
+          <li class="sidebarlistitem">
+            <i class="fa-solid fa-clipboard"
+              ><a href="/api/allProducts">Products</a></i
+            >
+          </li>
+          <li class="sidebarlistitem">
+            <i class="fa-solid fa-print"
+              ><a href="/api/deleteOne">Delete user/product</a></i
+            >
+          </li>
+        </ul>
+      </aside>
+      <!------------------------MAIN--------------------------->
+      <main class="maincontainer">
+        <div class="maintitle">
+          <h2 style="color: white">Dashboard</h2>
+        </div>
+        <!------------------------CARDS--------------------------->
+        <div class="maincards">
+          <div class="card">
+            <div class="cardinner">
+              <h3>Products</h3>
+              <i class="fa-solid fa-cubes-stacked"></i>
+            </div>
+            <h1 id="productCount"></h1>
+          </div>
+
+          <div class="card">
+            <div class="cardinner">
+              <h3>Customers</h3>
+              <i class="fa-solid fa-user"></i>
+            </div>
+            <h1 id="userCount"></h1>
+          </div>
+
+          <div class="card">
+            <div class="cardinner">
+              <h3>Alerts</h3>
+              <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h1>Nothing yet!</h1>
+          </div>
+
+          <div class="card">
+            <div class="cardinner">
+              <h3>Orders</h3>
+              <i class="fa-solid fa-cart-shopping"></i>
+            </div>
+            <h1>Nothing yet!</h1>
+          </div>
+        </div>
+        <!-------------------CHARTS-------------------------->
+        <div class="charts">
+          <div class="charts-card">
+            <h2 class="chart-title">Stock categories managment</h2>
+            <div id="piechart" style="width: 500px; height: 500px"></div>
+          </div>
+          <div class="charts-card">
+            <h2 class="chart-title">Clients and stock growth</h2>
+            <div id="curve_chart" style="width: 500px; height: 500px"></div>
+          </div>
+        </div>
+
+        <!-------------------ADDPRODUCT-------------------------->
+        <div class="addingproducts">
+          <h3>Add Product</h3>
+          <div class="btnchoice">
+            <button id="motorbtn">Motor</button>
+            <button id="propellerbtn">Propeller</button>
+            <button id="camerabtn">Case</button>
+            <button id="casebtn">Camera</button>
+            <button id="rtfbtn">RTF drone</button>
+          </div>
+
+          <div class="formses" id="form1">
+            <form action="">
+              <div class="formName">Adding motor</div>
+              <div class="label">Name</div>
+              <input type="text" placeholder="Add name" id="motorName" />
+
+              <div class="label">Power</div>
+              <input
+                type="text"
+                placeholder="Add number of V"
+                id="motorPower"
+              />
+
+              <div class="label">Connector</div>
+              <input
+                type="text"
+                placeholder="Add connector type"
+                id="motorConnector"
+              />
+
+              <div class="label">Type</div>
+              <input type="text" placeholder="Add motor type" id="motorType" />
+
+              <div class="label">Price</div>
+              <input
+                type="text"
+                placeholder="Add price number"
+                id="motorPrice"
+              />
+
+              <div><button type="submit" id="formbtn">Add Product</button></div>
+            </form>
+          </div>
+
+          <div class="formses" id="form2">
+            <form action="">
+              <div class="formName">Adding Propeller</div>
+              <div class="label">Name</div>
+              <input
+                type="text"
+                placeholder="Add propeller name"
+                id="propellerName"
+              />
+
+              <div class="label">Size</div>
+              <input
+                type="text"
+                placeholder="Add number propeller size"
+                id="propellerSize"
+              />
+
+              <div class="label">Color</div>
+              <input
+                type="text"
+                placeholder="Add propeller color"
+                id="propellerColor"
+              />
+
+              <div class="label">PeakNumber</div>
+              <input
+                type="text"
+                placeholder="Propeller number of peaks"
+                id="propellerPeakNumber"
+              />
+
+              <div class="label">Price</div>
+              <input
+                type="text"
+                placeholder="Propeller price number"
+                id="propellerPrice"
+              />
+
+              <div><button type="submit" id="formbtn">Add Product</button></div>
+            </form>
+          </div>
+
+          <div class="formses" id="form3">
+            <form action="">
+              <div class="formName">Adding Case</div>
+              <div class="label">Name</div>
+              <input type="text" placeholder="Add case name" id="caseName" />
+
+              <div class="label">Size</div>
+              <input type="text" placeholder="Add case size" id="caseSize" />
+
+              <div class="label">Material</div>
+              <input
+                type="text"
+                placeholder="Add case material"
+                id="caseMaterial"
+              />
+
+              <div class="label">Color</div>
+              <input type="text" placeholder="Add case color" id="caseColor" />
+
+              <div class="label">Price</div>
+              <input
+                type="text"
+                placeholder="Add number price"
+                id="casePrice"
+              />
+
+              <div><button type="submit" id="formbtn">Add Product</button></div>
+            </form>
+          </div>
+
+          <div class="formses" id="form4">
+            <form action="">
+              <div class="formName">Adding Camera</div>
+              <div class="label">Name</div>
+              <input
+                type="text"
+                placeholder="Add camera name"
+                id="cameraName"
+              />
+
+              <div class="label">Resolution</div>
+              <input
+                type="text"
+                placeholder="Add number resolution"
+                id="cameraResolution"
+              />
+
+              <div class="label">Sensor</div>
+              <input
+                type="text"
+                placeholder="Add name of sensor"
+                id="cameraSensor"
+              />
+
+              <div class="label">Focal</div>
+              <input
+                type="text"
+                placeholder="Add number focal"
+                id="cameraFocal"
+              />
+
+              <div class="label">Price</div>
+              <input
+                type="text"
+                placeholder="Add number price"
+                id="cameraPrice"
+              />
+
+              <div><button type="submit" id="formbtn">Add Product</button></div>
+            </form>
+          </div>
+
+          <div class="formses" id="form5">
+            <form action="">
+              <div class="formName">Adding RTF drone</div>
+              <div class="label">Name</div>
+              <input type="text" placeholder="Add drone name" id="droneName" />
+
+              <div class="label">Battery life</div>
+              <input
+                type="text"
+                placeholder="Add drone number hours"
+                id="droneBatterylife"
+              />
+
+              <div class="label">Camera</div>
+              <input
+                type="text"
+                placeholder="Add drone camera type"
+                id="droneCamera"
+              />
+
+              <div class="label">Drone weight</div>
+              <input type="text" placeholder="Number weight" id="droneWeight" />
+
+              <div class="label">Price</div>
+              <input
+                type="text"
+                placeholder="Drone price number"
+                id="dronePrice"
+              />
+
+              <div><button type="submit" id="formbtn">Add Product</button></div>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      let sidebarOpen = false;
+      const sidebar = document.getElementById("sidebar");
+
+      function openSidebar() {
+        if (!sidebarOpen) {
+          sidebar.classList.add("sidebar-responsive");
+          sidebarOpen = true;
+        }
+      }
+
+      function closeSidebar() {
+        if (sidebarOpen) {
+          sidebar.classList.remove("sidebar-responsive");
+          sidebarOpen = false;
+        }
+      }
+      document.addEventListener("DOMContentLoaded", () => {
+        // Reset input fields
+        const inputFields = document.querySelectorAll(
+          "input[type='text'], input[type='number']"
+        );
+        inputFields.forEach((field) => {
+          field.value = ""; // Clear input value
+        });
+        
+      });
+      
+    </script>
+  </body>
+</html>

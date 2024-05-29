@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BuildYourDrone</title>
+  <link rel="icon" type="image/x-icon" href="../media/bigdrone.png">
+  <script src="https://kit.fontawesome.com/2cdc7801c1.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="../CSSCode/homepage.css">
+  <link rel="stylesheet" href="../CSSCode/products.css">
+</head>
+<body class="productbody">
+  <header>
+    <!-- NAVBAR -->
+    <div class="navbar">
+      <div class="logo">
+        <a href="/"><img src="../media/drone-icon-white-png.png" alt="">BuildYourDrone</a>
+      </div>
+      <ul class="links">
+        <li><a href="/">Home</a></li>
+        <li><a href="">Shop</a></li>
+        <li><a href="">About</a></li>
+        <li><a href="">Contact</a></li>
+        <li><a href="/product"><i class="fa-solid fa-cart-shopping"></i></a></li>
+        <li><a href="/login"><i class="fa-solid fa-user"></i></a></li>
+      </ul>
+      <div class="toggle"><i class="fa-solid fa-bars"></i></div>
+    </div>
+    <div class="dropdownmenu">
+      <li><a href="#">Home</a></li>
+      <li><a href="">Shop</a></li>
+      <li><a href="">About</a></li>
+      <li><a href="">Contact</a></li>
+      <li><a href="/product"><i class="fa-solid fa-cart-shopping"></i></a></li>
+      <li><a href="/login"><i class="fa-solid fa-user"></i></a></li>
+    </div>
+    <!-- HEADER -->
+    <div class="row">
+      <div class="col imagecol">
+        <div class="back">
+          <a href=""><i class="fa-solid fa-circle-arrow-left"></i></a>
+        </div>
+        <img src="../media/case.jpg" alt="case" width="500px" id="productImage" />
+      </div>
+      <div class="col textincol">
+        <p id="productStep">Step1 / Motors</p>
+        <h2 id="productName">Motor named something</h2>
+        <h4 id="productPrice">500.00€</h4>
+        <select name="" id="productSize">
+          <option value="">Size</option>
+          <option value="">S</option>
+          <option value="">M</option>
+          <option value="">L</option>
+        </select>
+        <a href="" class="startbtn">Add to cart</a>
+        <h4>Product details</h4>
+        <p id="productDetails">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus obcaecati facilis corporis ab, dignissimos praesentium enim consectetur ad eius cumque. Hic sit vel harum impedit et eaque, animi nihil quod.
+        </p>
+      </div>
+      <a href="" class="startbtn nxt">Next step &#8594;</a>
+    </div>
+  </header>
+  <div class="container1">
+    <h1>Step1 - Choose a motor</h1>
+    <div class="row2" id="productsContainer">
+      <!-- Product items will be dynamically injected here -->
+    </div>
+  </div>
+  <a href="" class="startbtn next">Next step &#8594;</a>
+  <!-- SCRIPT -->
+  <script>
+    const toggle = document.querySelector(".toggle");
+    const dropdownmenu = document.querySelector(".dropdownmenu");
+    const toggleicon = document.querySelector(".toggle i");
+
+    toggle.onclick = function () {
+      dropdownmenu.classList.toggle("open");
+      const isOpen = dropdownmenu.classList.contains("open");
+
+      toggleicon.classList = isOpen ? "fa-solid fa-xmark" : "fa-solid fa-bars";
+    };
+
+    document.addEventListener("DOMContentLoaded", async function () {
+      const container = document.getElementById("productsContainer");
+      try {
+        const response = await fetch("/api/allProducts");
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const products = await response.json();
+
+        products.forEach((product, index) => {
+          let productImageSrc = "../media/case.jpg"; // Default image, update based on product type if necessary
+          let productName = "";
+          let productPrice = "";
+          let productDetails = "";
+          let productSizeOptions = "";
+
+          if (product.motorName) {
+            productName = product.motorName;
+            productPrice = `${product.motorPrice.toFixed(2)}€`;
+            productDetails = `Power: ${product.motorPower}`;
+            productSizeOptions = `
+              <option value="S">S</option>
+              <option value="M">M</option>
+              <option value="L">L</option>
+            `;
+          } else if (product.propellerName) {
+            productName = product.propellerName;
+            productPrice = `${product.propellerPrice.toFixed(2)}€`;
+            productDetails = `Size: ${product.propellerSize}`;
+          } else if (product.cameraName) {
+            productName = product.cameraName;
+            productPrice = `${product.cameraPrice.toFixed(2)}€`;
+            productDetails = `Resolution: ${product.cameraResolution}`;
+          } else if (product.caseName) {
+            productName = product.caseName;
+            productPrice = `${product.casePrice.toFixed(2)}€`;
+            productDetails = `Size: ${product.caseSize}`;
+          } else {
+            productName = "Unknown product type";
+          }
+
+          if (index === 0) {
+            // Update the header section with the first product's data
+            document.getElementById("productImage").src = productImageSrc;
+            document.getElementById("productName").textContent = productName;
+            document.getElementById("productPrice").textContent = productPrice;
+            document.getElementById("productDetails").textContent = productDetails;
+            document.getElementById("productSize").innerHTML = productSizeOptions;
+          }
+
+          // Create a product element
+          const productElement = document.createElement("div");
+          productElement.classList.add("col4");
+          productElement.innerHTML = `
+            <div class="product-card">
+              <img src="${productImageSrc}" alt="${productName}" width="200px" />
+              <p>${productDetails}</p>
+              <h2>${productName}</h2>
+              <h4>${productPrice}</h4>
+              <select>
+                ${productSizeOptions}
+              </select>
+              <a href="" class="startbtn">Add to cart</a>
+              <h4>Product details</h4>
+              <p>${productDetails}</p>
+            </div>
+          `;
+          container.appendChild(productElement);
+        });
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    });
+  </script>
+</body>
+</html>
